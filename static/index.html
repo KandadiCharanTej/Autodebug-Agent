@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI-powered autonomous code debugging agent — analyzes, fixes, validates, and executes your code in real-time.">
+    <title>Agentic Code Fixer | AI Debug Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="site-header">
+            <div class="logo-row">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+                <span class="logo-text">CodeFixer<span class="logo-dot">.</span>ai</span>
+            </div>
+            <h1>Agentic Code Debugger</h1>
+            <p class="subtitle">AI that <em>iterates</em>, <em>reasons</em>, and <em>validates</em> — not just one-shot
+                fixes.</p>
+            <div class="header-badges">
+                <span class="hbadge">🔁 Self-Correcting</span>
+                <span class="hbadge">🧠 Multi-Language</span>
+                <span class="hbadge">✅ Auto-Validated</span>
+                <span class="hbadge">⚡ Optimized</span>
+                <span class="hbadge">📡 Real-Time</span>
+                <span class="hbadge">🖥️ Sandbox</span>
+            </div>
+        </header>
+
+        <!-- MAIN GRID -->
+        <main class="grid">
+
+            <!-- ═══ INPUT PANEL ═══ -->
+            <section class="panel input-panel" aria-label="Input">
+                <div class="panel-header">
+                    <div class="panel-indicator"></div>
+                    <h2>1. Provide Error</h2>
+                </div>
+
+                <!-- Example Presets -->
+                <div class="presets-bar">
+                    <span class="presets-label">Try an example:</span>
+                    <button class="preset-btn" id="preset-python" type="button">🐍 Python</button>
+                    <button class="preset-btn" id="preset-js" type="button">⚡ JavaScript</button>
+                    <button class="preset-btn" id="preset-sql" type="button">🗄️ SQL</button>
+                    <button class="preset-btn" id="preset-url" type="button">🔗 URL</button>
+                </div>
+
+                <form id="debug-form" novalidate>
+                    <div class="field">
+                        <label for="error-input">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            Error / Stack Trace
+                        </label>
+                        <textarea id="error-input"
+                            placeholder="e.g. ZeroDivisionError: division by zero&#10;Traceback (most recent call last):&#10;  File 'main.py', line 3 ..."
+                            spellcheck="false"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="code-input">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                            Source Code
+                        </label>
+                        <textarea id="code-input" placeholder="Paste your buggy code here..."
+                            spellcheck="false"></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-btn">
+                        <span id="btn-text">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                            Run Debug Agent
+                        </span>
+                        <div class="btn-loader" id="btn-loader" style="display:none;">
+                            <div class="dot-flashing"></div>
+                        </div>
+                    </button>
+                </form>
+
+                <!-- Live Pipeline Status -->
+                <div class="pipeline-status" id="pipeline-status" style="display:none;">
+                    <div class="pipeline-steps">
+                        <div class="pipe-step" id="pipe-pattern" data-step="pattern_lookup">
+                            <div class="pipe-dot"></div><span>Memory</span>
+                        </div>
+                        <div class="pipe-connector"></div>
+                        <div class="pipe-step" id="pipe-analyze" data-step="analyzing">
+                            <div class="pipe-dot"></div><span>Analyze</span>
+                        </div>
+                        <div class="pipe-connector"></div>
+                        <div class="pipe-step" id="pipe-fix" data-step="fixing">
+                            <div class="pipe-dot"></div><span>Fix</span>
+                        </div>
+                        <div class="pipe-connector"></div>
+                        <div class="pipe-step" id="pipe-validate" data-step="validating">
+                            <div class="pipe-dot"></div><span>Validate</span>
+                        </div>
+                        <div class="pipe-connector"></div>
+                        <div class="pipe-step" id="pipe-execute" data-step="executing">
+                            <div class="pipe-dot"></div><span>Execute</span>
+                        </div>
+                        <div class="pipe-connector"></div>
+                        <div class="pipe-step" id="pipe-optimize" data-step="optimizing">
+                            <div class="pipe-dot"></div><span>Optimize</span>
+                        </div>
+                    </div>
+                    <p class="pipeline-msg" id="pipeline-msg">Initializing...</p>
+                </div>
+
+                <!-- Debug History -->
+                <div class="history-section" id="history-section" style="display:none;">
+                    <div class="panel-header" style="margin-top:1.2rem;">
+                        <div class="panel-indicator" style="background:var(--purple);box-shadow:0 0 8px var(--purple);"></div>
+                        <h2>History</h2>
+                        <button class="clear-history-btn" id="clear-history-btn" type="button" title="Clear history">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                    <div id="history-list" class="history-list"></div>
+                </div>
+
+                <!-- Info footer -->
+                <div class="panel-footer">
+                    <span>Powered by Groq · Llama 3.3 70B · <span id="pattern-count-footer">0</span> patterns learned</span>
+                </div>
+            </section>
+
+            <!-- ═══ OUTPUT PANEL ═══ -->
+            <section class="panel output-panel" aria-label="Results">
+                <div class="panel-header">
+                    <div class="panel-indicator success"></div>
+                    <h2>2. Debug Results</h2>
+                </div>
+
+                <!-- Empty state -->
+                <div id="results-placeholder" class="empty-state">
+                    <div class="empty-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </div>
+                    <p class="empty-title">Awaiting Input</p>
+                    <p class="empty-sub">Paste your error and code, then click <strong>Run Debug Agent</strong>.</p>
+                </div>
+
+                <!-- Results -->
+                <div id="results-content" style="display:none;">
+
+                    <!-- Meta row -->
+                    <div class="meta-strip" id="meta-strip">
+                        <span class="meta-item" id="res-lang">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                            <span id="lang-text">—</span>
+                        </span>
+                        <span class="meta-sep"></span>
+                        <span class="meta-item" id="res-type">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            <span id="type-text">—</span>
+                        </span>
+                        <span class="meta-sep"></span>
+                        <span class="meta-item retry-meta" id="res-retries">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="23 4 23 10 17 10" />
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                            </svg>
+                            <span id="retry-text">0 retries</span>
+                        </span>
+                    </div>
+
+                    <!-- Confidence Score -->
+                    <div class="confidence-card" id="card-confidence" style="display:none;">
+                        <div class="confidence-ring-wrap">
+                            <svg class="confidence-ring" viewBox="0 0 100 100">
+                                <circle class="ring-bg" cx="50" cy="50" r="42" />
+                                <circle class="ring-fill" id="confidence-ring-fill" cx="50" cy="50" r="42" />
+                            </svg>
+                            <span class="confidence-value" id="confidence-value">0%</span>
+                        </div>
+                        <div class="confidence-info">
+                            <span class="confidence-label">Confidence Score</span>
+                            <span class="confidence-desc" id="confidence-desc">Calculating...</span>
+                        </div>
+                    </div>
+
+                    <!-- Pattern Match Badge -->
+                    <div class="pattern-match-card" id="card-pattern" style="display:none;">
+                        <div class="pattern-icon">🧠</div>
+                        <div class="pattern-info">
+                            <span class="pattern-title">Similar Pattern Found</span>
+                            <span class="pattern-detail" id="pattern-detail"></span>
+                        </div>
+                        <span class="pattern-similarity" id="pattern-similarity"></span>
+                    </div>
+
+                    <!-- Analysis Card -->
+                    <div class="card" id="card-analysis">
+                        <div class="card-label">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            Analysis
+                        </div>
+                        <div class="codeblock">
+                            <pre><code id="res-analysis" class="language-json"></code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Steps Card -->
+                    <div class="card" id="card-steps">
+                        <div class="card-label">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 11 12 14 22 4" />
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                            </svg>
+                            Agent Reasoning Steps
+                        </div>
+                        <ol id="res-steps-list" class="steps-list"></ol>
+                    </div>
+
+                    <!-- Fix Explanation -->
+                    <div class="card" id="card-explanation">
+                        <div class="card-label">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            Fix Explanation
+                        </div>
+                        <p id="res-fix-explanation" class="explanation-text"></p>
+                    </div>
+
+                    <!-- Optimization Note -->
+                    <div class="card" id="card-optimization" style="display:none;">
+                        <div class="card-label" style="color: #f59e0b;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            Optimization
+                        </div>
+                        <p id="res-optimization-note" class="explanation-text" style="color: #f59e0b;"></p>
+                    </div>
+
+                    <!-- Code Diff View -->
+                    <div class="card" id="card-diff" style="display:none;">
+                        <div class="card-label" style="color: var(--cyan);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3v18"/>
+                                <path d="M18 9l-6-6-6 6"/>
+                            </svg>
+                            Code Diff
+                            <span class="diff-legend">
+                                <span class="diff-legend-del">— removed</span>
+                                <span class="diff-legend-add">+ added</span>
+                            </span>
+                        </div>
+                        <div class="codeblock diff-block">
+                            <pre><code id="res-diff"></code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Updated Code -->
+                    <div class="card" id="card-code">
+                        <div class="card-label" style="margin-bottom:0.6rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                            Fixed Code
+                        </div>
+                        <div class="codeblock editor-block">
+                            <div class="editor-bar">
+                                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                                <span class="editor-lang" id="editor-lang-label">code</span>
+                                <button class="copy-btn" id="copy-btn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre><code id="res-updated-code"></code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Sandbox Execution Result -->
+                    <div class="card" id="card-execution" style="display:none;">
+                        <div class="card-label" style="color: var(--cyan);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                            Sandbox Execution
+                            <span class="execution-time" id="execution-time"></span>
+                        </div>
+                        <div class="terminal-block">
+                            <div class="terminal-header">
+                                <span class="terminal-dot"></span>
+                                <span class="terminal-dot"></span>
+                                <span class="terminal-dot"></span>
+                                <span class="terminal-title">output</span>
+                            </div>
+                            <pre class="terminal-output" id="execution-output"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Validation -->
+                    <div class="card validation-card" id="card-validation">
+                        <div class="card-label">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            Validation
+                        </div>
+                        <div id="res-validation" class="validation-pill"></div>
+                    </div>
+
+                    <!-- Conversational Follow-Up -->
+                    <div class="card chat-card" id="card-chat" style="display:none;">
+                        <div class="card-label" style="color: var(--purple);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Follow-Up Chat
+                        </div>
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-bar">
+                            <input type="text" id="chat-input" placeholder="Ask about this fix... (e.g. 'Why this approach?')" autocomplete="off" />
+                            <button type="button" id="chat-send-btn" title="Send">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
