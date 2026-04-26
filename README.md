@@ -900,6 +900,10 @@ Contributions are welcome! Areas for improvement:
 - **Feature Requests**: Create an issue with detailed description
 - **Bug Reports**: Include error trace and reproduction steps
 
+### **Contact**
+- **Email**: [kandadicharantej21@gmail.com](mailto:kandadicharantej21@gmail.com)
+- **LinkedIn**: [linkedin.com/in/kandadicharantej](https://linkedin.com/in/kandadicharantej)
+
 ---
 
 **Happy Debugging! 🚀** 
